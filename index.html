@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Mi Amor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fce4ec 0%, #e8eaf6 25%, #f3e5f5 45%, #fff9c4 65%, #e8f5e9 80%, #fce4ec 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      font-family: 'Quicksand', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+      padding: 20px;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Floating decorations */
+    .floating-decor {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .heart-float {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      font-size: 20px;
+      animation: floatUp linear infinite backwards;
+      opacity: 0;
+      top: 0;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0; }
+      10% { opacity: 0.7; }
+      90% { opacity: 0.5; }
+      100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); opacity: 0; }
+    }
+
+    .star-twinkle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      animation: twinkle ease-in-out infinite alternate backwards;
+      top: 0; left: 0;
+      opacity: 0;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.1; transform: scale(0.5); }
+      100% { opacity: 0.8; transform: scale(1); }
+    }
+
+    /* Clouds */
+    .cloud {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      animation: cloudDrift linear infinite backwards;
+      top: 0;
+    }
+
+    @keyframes cloudDrift {
+      0% { transform: translateX(-200px); }
+      100% { transform: translateX(calc(100vw + 200px)); }
+    }
+
+    /* Main container */
+    .main-container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    /* HEADER PRIDE */
+    .pride-header {
+      text-align: center;
+      margin-bottom: 30px;
+      opacity: 0;
+      animation: fadeIn 1s ease 0.5s forwards;
+    }
+
+    .pride-header h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.2rem;
+      color: #7b4f8a;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.08);
+      margin-bottom: 8px;
+    }
+
+    .pride-header .pride-flags {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .pride-header .pride-flags span {
+      display: inline-block;
+      width: 30px;
+      height: 6px;
+      border-radius: 3px;
+    }
+
+    .pride-stripe:nth-child(1) { background: #ff6b6b; }
+    .pride-stripe:nth-child(2) { background: #ffa94d; }
+    .pride-stripe:nth-child(3) { background: #ffd43b; }
+    .pride-stripe:nth-child(4) { background: #69db7c; }
+    .pride-stripe:nth-child(5) { background: #4dabf7; }
+    .pride-stripe:nth-child(6) { background: #9775fa; }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* ===== ENVELOPE ===== */
+    .envelope-scene {
+      perspective: 1200px;
+      margin: 20px auto;
+      position: relative;
+      width: 320px;
+      height: 240px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .envelope-scene:hover {
+      transform: scale(1.03);
+    }
+
+    .envelope-scene.closed .envelope-flap {
+      transform: rotateX(0deg);
+    }
+
+    .envelope-scene.open .envelope-flap {
+      transform: rotateX(-180deg);
+    }
+
+    .envelope-scene.open .letter-inside {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .envelope-scene.open .envelope-front-body .envelope-text {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .envelope-scene.open {
+      cursor: default;
+    }
+
+    .envelope-scene.open:hover {
+      transform: scale(1);
+    }
+
+    .envelope {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+    }
+
+    /* Back of envelope */
+    .envelope-back {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 85%;
+      background: linear-gradient(135deg, #fce4ec, #fff0f6, #f8f0ff, #e8f5e9);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(123, 79, 138, 0.2), 0 2px 8px rgba(0,0,0,0.06);
+      z-index: 1;
+    }
+
+    .envelope-back::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,182,193,0.2) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(200,180,255,0.2) 0%, transparent 50%);
+      border-radius: 12px;
+    }
+
+    /* Envelope body */
+    .envelope-front-body {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 85%;
+      background: linear-gradient(160deg, #fff5f7, #ffffff, #faf0ff, #f0faf5);
+      border-radius: 12px;
+      border: 2px solid rgba(255,182,193,0.3);
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.6s ease;
+      overflow: hidden;
+    }
+
+    .envelope-front-body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,182,193,0.4), transparent);
+    }
+
+    .envelope-front-body .envelope-text {
+      text-align: center;
+      transition: all 0.6s ease;
+      z-index: 2;
+      position: relative;
+    }
+
+    .envelope-front-body .envelope-text p {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.8rem;
+      color: #c47a9d;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.06);
+      line-height: 1.3;
+    }
+
+    .envelope-front-body .envelope-text .heart-icon {
+      display: inline-block;
+      animation: heartbeat 1.5s ease-in-out infinite;
+      font-size: 1.6rem;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.3); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.2); }
+      60% { transform: scale(1); }
+    }
+
+    /* Decorative elements on envelope */
+
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* Envelope flap */
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 38%;
+      z-index: 4;
+      transform-origin: top center;
+      transition: transform 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .envelope-flap-inner {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(160deg, #fff5f7, #ffffff, #faf0ff);
+      clip-path: polygon(0 0, 100% 0, 80% 100%, 50% 88%, 20% 100%);
+      border: 2px solid rgba(255,182,193,0.3);
+      border-bottom: none;
+      border-radius: 12px 12px 0 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 -4px 15px rgba(123, 79, 138, 0.08);
+    }
+
+    .envelope-flap-inner::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 16px;
+      opacity: 0.2;
+    }
+
+    /* ===== LETTER ===== */
+    .letter-inside {
+      position: absolute;
+      bottom: 5%;
+      left: 5%;
+      width: 90%;
+      height: 78%;
+      background: linear-gradient(160deg, #fffbf5, #fffef9, #fcf8f0);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08), inset 0 0 30px rgba(255,215,175,0.15);
+      z-index: 2;
+      transform: translateY(100%);
+      opacity: 0;
+      transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(255,215,175,0.3);
+    }
+
+    .letter-inside::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(ellipse at 20% 80%, rgba(255,215,175,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(200,180,220,0.06) 0%, transparent 50%);
+      border-radius: 10px;
+      pointer-events: none;
+    }
+
+    /* Corner decorations removed */
+
+    .letter-inside .letter-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .letter-inside .letter-content .letter-label {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.3rem;
+      color: #b8799a;
+      margin-bottom: 12px;
+    }
+
+    .letter-inside .letter-content .letter-divider {
+      width: 60%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200,180,220,0.5), transparent);
+      margin: 8px 0;
+    }
+
+    .letter-inside .letter-content .letter-placeholder {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.95rem;
+      color: #8a7a9a;
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.5px;
+      padding: 10px 5px;
+      border: 1px dashed rgba(200,180,220,0.3);
+      border-radius: 8px;
+      width: 90%;
+      background: rgba(255,215,175,0.05);
+    }
+
+    /* ===== LETTER FULL VIEW (after envelope closes) ===== */
+    .letter-full-section {
+      width: 100%;
+      max-width: 600px;
+      max-height: 0;
+      overflow: hidden;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+      transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .letter-full-section.visible {
+      max-height: 3000px;
+      margin: 40px auto 30px;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .letter-full {
+      background: linear-gradient(160deg, #fffbf5, #fffef9, #fcf8f0);
+      border-radius: 20px;
+      padding: 40px 35px;
+      box-shadow:
+        0 10px 40px rgba(123, 79, 138, 0.12),
+        0 2px 10px rgba(0,0,0,0.04),
+        inset 0 0 40px rgba(255,215,175,0.1);
+      border: 2px solid rgba(255,215,175,0.2);
+      position: relative;
+    }
+
+    .letter-full::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 1px solid rgba(200,180,220,0.15);
+      border-radius: 14px;
+      pointer-events: none;
+    }
+
+    .letter-full .letter-salute {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2rem;
+      color: #b8799a;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .letter-full .letter-body {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: #5a4a6a;
+      padding: 10px 0;
+      min-height: 120px;
+      width: 100%;
+    }
+
+    .letter-full .letter-body .placeholder-text {
+      color: #5a4a6a;
+      font-weight: 400;
+      padding: 10px 5px;
+      width: 100%;
+      text-align: left;
+      white-space: pre-line;
+      background: rgba(255,215,175,0.04);
+    }
+
+    .letter-full .letter-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.3rem;
+      color: #c47a9d;
+    }
+
+    /* ===== GALLERY ===== */
+    .gallery-section {
+      width: 100%;
+      max-width: 700px;
+      max-height: 0;
+      overflow: hidden;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .gallery-section.visible {
+      max-height: 2000px;
+      margin: 20px auto 40px;
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .gallery-section .gallery-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.8rem;
+      color: #b8799a;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .gallery-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+
+    .photo-frame {
+      width: 320px;
+      background: white;
+      border-radius: 16px;
+      padding: 14px 14px 14px;
+      box-shadow:
+        0 8px 30px rgba(123, 79, 138, 0.12),
+        0 2px 8px rgba(0,0,0,0.04);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      transform: rotate(-1.5deg);
+    }
+
+    .photo-frame:nth-child(2) {
+      transform: rotate(2deg);
+    }
+
+    .photo-frame:nth-child(3) {
+      transform: rotate(-1deg);
+    }
+
+    .photo-frame:hover {
+      transform: rotate(0deg) scale(1.03) translateY(-8px);
+      box-shadow:
+        0 20px 50px rgba(123, 79, 138, 0.18),
+        0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .photo-frame .photo-placeholder {
+      width: 100%;
+      background: linear-gradient(135deg, #fce4ec, #e8eaf6, #f3e5f5);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(200,180,220,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+
+
+    /* Pride ribbon decoration */
+    .pride-ribbon {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      margin: 30px 0 10px;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .pride-ribbon.visible {
+      opacity: 1;
+    }
+
+    .pride-ribbon span {
+      display: inline-block;
+      width: 20px;
+      height: 4px;
+      border-radius: 2px;
+    }
+
+    /* ===== PARTICLE ===== */
+    .particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 100;
+      animation: particleBurst ease-out forwards;
+    }
+
+    @keyframes particleBurst {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0) rotate(720deg);
+      }
+    }
+
+    .sparkle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 101;
+      font-size: 16px;
+      animation: sparkleAnim ease-out forwards;
+    }
+
+    @keyframes sparkleAnim {
+      0% { opacity: 0; transform: scale(0) translate(0, 0); }
+      30% { opacity: 1; transform: scale(1.2) translate(var(--sx), var(--sy)); }
+      100% { opacity: 0; transform: scale(0) translate(var(--sx2), var(--sy2)); }
+    }
+
+    .floating-heart-burst {
+      position: fixed;
+      pointer-events: none;
+      z-index: 102;
+      font-size: 18px;
+      animation: heartBurst ease-out forwards;
+    }
+
+    @keyframes heartBurst {
+      0% { opacity: 1; transform: translate(0, 0) scale(0.5) rotate(0deg); }
+      50% { opacity: 0.9; transform: translate(var(--hx), var(--hy)) scale(1.2) rotate(180deg); }
+      100% { opacity: 0; transform: translate(var(--hx2), var(--hy2)) scale(0.3) rotate(360deg); }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      body {
+        padding: 16px;
+      }
+
+      .envelope-scene {
+        width: 260px;
+        height: 200px;
+      }
+
+      .envelope-front-body .envelope-text p {
+        font-size: 1.4rem;
+      }
+
+      .letter-full {
+        padding: 25px 18px;
+      }
+
+      .letter-full .letter-salute {
+        font-size: 1.5rem;
+      }
+
+      .letter-full .letter-body {
+        font-size: 0.95rem;
+      }
+
+      .photo-frame {
+        width: 240px;
+      }
+
+      .pride-header h1 {
+        font-size: 1.6rem;
+      }
+
+      .pride-header {
+        margin-bottom: 20px;
+      }
+
+      .letter-full-section {
+        margin: 30px auto 20px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      body {
+        padding: 12px;
+      }
+
+      .envelope-scene {
+        width: 250px;
+        height: 190px;
+        margin: 10px auto;
+      }
+
+      .envelope-front-body .envelope-text p {
+        font-size: 1.3rem;
+      }
+
+      .pride-header h1 {
+        font-size: 1.35rem;
+      }
+
+      .pride-header {
+        margin-bottom: 15px;
+      }
+
+      .letter-full {
+        padding: 20px 14px;
+      }
+
+      .letter-full .letter-salute {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+      }
+
+      .letter-full .letter-body {
+        font-size: 0.88rem;
+        min-height: 80px;
+      }
+
+      .letter-full .letter-body .placeholder-text {
+        padding: 8px 3px;
+      }
+
+      .letter-full-section.visible {
+        margin: 25px auto 15px;
+      }
+
+      .photo-frame {
+        width: 100%;
+        max-width: 340px;
+        padding: 10px;
+      }
+
+      .photo-frame .photo-placeholder {
+        font-size: 0.75rem;
+      }
+
+      .gallery-grid {
+        gap: 20px;
+      }
+
+      .gallery-section.visible {
+        margin: 10px auto 25px;
+      }
+
+      .pride-ribbon {
+        margin: 15px 0 5px;
+      }
+
+      .letter-inside {
+        padding: 12px;
+      }
+
+      .letter-inside .letter-content .letter-placeholder {
+        font-size: 0.8rem;
+        padding: 8px 5px;
+      }
+
+      .envelope-scene.open {
+        margin-bottom: 0;
+      }
+
+      .rainbow-divider {
+        margin: 5px auto 15px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .envelope-scene {
+        width: 210px;
+        height: 160px;
+      }
+
+      .pride-header h1 {
+        font-size: 1.15rem;
+      }
+
+      .photo-frame {
+        max-width: 230px;
+      }
+    }
+
+    /* Accessibility & loading states */
+    .envelope-scene.loading {
+      opacity: 0.6;
+    }
+
+    /* Pride small flag decoration in corner */
+    .pride-corner-flag {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 0;
+      opacity: 0.15;
+      font-size: 2rem;
+      line-height: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pride-corner-flag span {
+      display: block;
+      width: 30px;
+      height: 4px;
+      margin: 1px 0;
+    }
+
+    /* Subtle rainbow divider */
+    .rainbow-divider {
+      width: 80%;
+      max-width: 400px;
+      height: 3px;
+      border-radius: 3px;
+      margin: 10px auto 25px;
+      background: linear-gradient(90deg,
+        #ff6b6b, #ffa94d, #ffd43b, #69db7c, #4dabf7, #9775fa, #ff6b6b);
+      background-size: 200% 100%;
+      animation: rainbowSlide 4s linear infinite;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .rainbow-divider.visible {
+      opacity: 1;
+    }
+
+    @keyframes rainbowSlide {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 200% 0%; }
+    }
+
+    /* Floating pride hearts in background */
+    .bg-pride-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.06;
+      font-size: 60px;
+      animation: bgHeartFloat 20s ease-in-out infinite;
+    }
+
+    @keyframes bgHeartFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+      25% { transform: translateY(-20px) rotate(5deg) scale(1.05); }
+      50% { transform: translateY(-10px) rotate(-3deg) scale(0.95); }
+      75% { transform: translateY(-25px) rotate(4deg) scale(1.02); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background floating decorations (populated by JS) -->
+  <div id="bg-decorations"></div>
+
+  <!-- Pride corner flag -->
+  <div class="pride-corner-flag">
+    <span style="background:#ff6b6b"></span>
+    <span style="background:#ffa94d"></span>
+    <span style="background:#ffd43b"></span>
+    <span style="background:#69db7c"></span>
+    <span style="background:#4dabf7"></span>
+    <span style="background:#9775fa"></span>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-container">
+    <!-- Pride Header -->
+    <div class="pride-header">
+      <h1>Feliz Mes del Orgullo, Mi Amor</h1>
+      <div class="pride-flags">
+        <span class="pride-stripe"></span>
+        <span class="pride-stripe"></span>
+        <span class="pride-stripe"></span>
+        <span class="pride-stripe"></span>
+        <span class="pride-stripe"></span>
+        <span class="pride-stripe"></span>
+      </div>
+    </div>
+
+    <!-- Envelope Scene -->
+    <div class="envelope-scene closed" id="envelopeScene">
+      <div class="envelope">
+        <!-- Back of envelope -->
+        <div class="envelope-back"></div>
+
+        <!-- Letter inside (slides up) -->
+        <div class="letter-inside" id="letterInside">
+          <div class="letter-content">
+            <div class="letter-label">Para mi persona favorita</div>
+            <div class="letter-divider"></div>
+            <div class="letter-placeholder">Mi amooor, este mes del orgullo quiero decirte algo que siento desde lo más profundo de mi corazón ❤️ estoy orgulloso de ti, orgulloso de nosotros...</div>
+          </div>
+        </div>
+
+        <!-- Front body of envelope -->
+        <div class="envelope-front-body">
+          <div class="envelope-text">
+            <p>
+              ábreme<br>
+              <span class="heart-icon">❤️</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Flap -->
+        <div class="envelope-flap" id="envelopeFlap">
+          <div class="envelope-flap-inner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rainbow divider -->
+    <div class="rainbow-divider" id="rainbowDivider"></div>
+
+    <!-- Letter full view (after opening) -->
+    <div class="letter-full-section" id="letterFullSection">
+      <div class="letter-full">
+        <div class="letter-salute">Mi amor</div>
+        <div class="letter-body">
+          <div class="placeholder-text">Mi amooor, este mes del orgullo quiero decirte algo que siento desde lo más profundo de mi corazón ❤️
+
+estoy orgulloso de ti, orgulloso de nosotros, orgulloso de lo que somos, no me da vergüenza amarte, nunca me va a dar vergüenza, al contrario, quiero que todo el mundo sepa que tengo al hombre más maravilloso a mi lado, que soy feliz contigo, que me hiciste creer en el amor y que caminaría agarrado de tu mano por donde sea, sin miedo, sin esconderme.
+
+somos valientes mi amor, porque a pesar de todo, a pesar de la vergüenza, de la gente que no entiende, aquí estamos, vivos, amándonos, felices, siendo nosotros mismos sin pedir disculpas, eso es ser valiente, y yo no cambiaría ni un solo beso tuyo ni una sola mirada tuya por nada en este mundo.
+
+gracias por ser mi hombre, gracias por ser mi novio, gracias por permitirme amarte como soy, nunca me esconderé de tu lado, quiero darte besos en la calle, agarrarte de la mano frente a quien sea, decirle a todo el mundo que eres mi amorcito y que estoy loco por ti, porque lo que siento no es un pecado, no es una vergüenza, es lo más bonito que me ha pasado en la vida.
+
+te amo, te amo, te amo, este mes del orgullo y todos los meses de mi vida quiero celebrar que existes, que me elegiste, que somos dos chicos que se encontraron y decidieron ser felices juntos, eso es un milagro, mi amor, y no le tengo miedo a mostrarlo.
+
+feliz mes del orgullo, mi niño precioso, eres mi tesoro más grande, te amo hasta el final de los días, no te dejaré por nada, porque contigo he encontrado mi lugar en el mundo, mi pareja de vida y mi mayor amor, tengo todo lo que necesito a tu lado, amo todo lo que me das y ofreces y no lo cambiaría por nadie más.
+
+estaré contigo por siempre te lo prometo mi amor, te haré feliz, te daré las ganas de vivir toda una vida conmigo, seremos felices, viviremos en el país que quieras, nos casaremos, tatuaremos, comeremos lo que queramos, te daré todos los regalos y detalles, porque te lo mereces, por ser alguien fenomenal, por ser tu mismo.
+
+adoro tu afecto, tu forma de amarme, de estar siempre a mi lado apoyándome, estoy feliz contigo y siempre lo seré, nuestro amor será eterno, que sea un mes hermoso de demostrar lo mucho que nos amamos, orgullosos de lo que sentimos.
+
+te amaré por siempre, y ese siempre es hoy y hasta que dejemos de vivir.
+
+encadename, amarrame, encierrame, violame, pegame, pero no me dejes nunca que no podría vivir sin ti.
+
+te amo mi niño 💞💖</div>
+        </div>
+        <div class="letter-footer">
+          <div>Con todo mi amor,</div>
+          <div style="font-size:1.5rem;margin-top:4px;color:#b8799a;">Tu novio</div>
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- Gallery -->
+    <div class="gallery-section" id="gallerySection">
+      <div class="gallery-grid">
+        <div class="photo-frame">
+          <div class="photo-placeholder">
+            <img src="WhatsApp Image 2026-05-31 at 5.11.18 PM.jpeg" alt="Nosotros besándonos" style="width:100%;height:auto;display:block;border-radius:10px;">
+          </div>
+        </div>
+        <div class="photo-frame">
+          <div class="photo-placeholder">
+            <img src="WhatsApp Image 2026-05-31 at 5.11.18 PM (1).jpeg" alt="Nosotros besándonos" style="width:100%;height:auto;display:block;border-radius:10px;">
+          </div>
+        </div>
+        <div class="photo-frame">
+          <div class="photo-placeholder">
+            <img src="WhatsApp Image 2026-05-31 at 5.11.18 PM (2).jpeg" alt="Nosotros besándonos" style="width:100%;height:auto;display:block;border-radius:10px;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pride ribbon -->
+    <div class="pride-ribbon" id="prideRibbon">
+      <span style="background:#ff6b6b"></span>
+      <span style="background:#ffa94d"></span>
+      <span style="background:#ffd43b"></span>
+      <span style="background:#69db7c"></span>
+      <span style="background:#4dabf7"></span>
+      <span style="background:#9775fa"></span>
+    </div>
+
+    <!-- Pride ribbon -->
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const envelopeScene = document.getElementById('envelopeScene');
+      const letterInside = document.getElementById('letterInside');
+      const envelopeFlap = document.getElementById('envelopeFlap');
+      const letterFullSection = document.getElementById('letterFullSection');
+      const gallerySection = document.getElementById('gallerySection');
+      const rainbowDivider = document.getElementById('rainbowDivider');
+      const prideRibbon = document.getElementById('prideRibbon');
+
+      let isOpen = false;
+
+      // --- Background decorations ---
+      function createBgDecorations() {
+        const container = document.getElementById('bg-decorations');
+        const heartEmojis = ['💖', '💗', '💕', '❤️', '💖', '💗'];
+
+        // Floating hearts — lots of them rising from bottom
+        for (let i = 0; i < 45; i++) {
+          const el = document.createElement('div');
+          el.className = 'heart-float';
+          el.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+          el.style.left = Math.random() * 100 + '%';
+          el.style.fontSize = (14 + Math.random() * 26) + 'px';
+          el.style.animationDuration = (10 + Math.random() * 18) + 's';
+          el.style.animationDelay = (Math.random() * 20) + 's';
+          container.appendChild(el);
+        }
+
+        // Stars
+        for (let i = 0; i < 25; i++) {
+          const el = document.createElement('div');
+          el.className = 'star-twinkle';
+          el.textContent = '✨';
+          el.style.left = Math.random() * 100 + '%';
+          el.style.top = Math.random() * 100 + '%';
+          el.style.fontSize = (10 + Math.random() * 14) + 'px';
+          el.style.animationDuration = (2 + Math.random() * 4) + 's';
+          el.style.animationDelay = (Math.random() * 5) + 's';
+          container.appendChild(el);
+        }
+
+        // Clouds
+        for (let i = 0; i < 8; i++) {
+          const el = document.createElement('div');
+          el.className = 'cloud';
+          el.textContent = '☁️';
+          el.style.top = (5 + Math.random() * 30) + '%';
+          el.style.fontSize = (30 + Math.random() * 50) + 'px';
+          el.style.animationDuration = (30 + Math.random() * 40) + 's';
+          el.style.animationDelay = (Math.random() * -40) + 's';
+          container.appendChild(el);
+        }
+
+        // Large background pride hearts
+        const prideHearts = ['🏳️‍🌈', '❤️', '💜', '💙'];
+        for (let i = 0; i < 4; i++) {
+          const el = document.createElement('div');
+          el.className = 'bg-pride-heart';
+          el.textContent = prideHearts[i];
+          el.style.left = (10 + Math.random() * 80) + '%';
+          el.style.top = (10 + Math.random() * 80) + '%';
+          el.style.fontSize = (50 + Math.random() * 60) + 'px';
+          el.style.animationDelay = (Math.random() * 10) + 's';
+          el.style.animationDuration = (15 + Math.random() * 15) + 's';
+          container.appendChild(el);
+        }
+      }
+      createBgDecorations();
+
+      // --- Burst particles ---
+      function createBurst(x, y) {
+        const emojis = ['❤️', '💖', '💗', '✨', '🌟', '⭐', '🌸', '💕', '🌈', '💜', '💙', '💕'];
+        const count = 28;
+
+        for (let i = 0; i < count; i++) {
+          const el = document.createElement('div');
+          const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+          const dist = 80 + Math.random() * 180;
+          const tx = Math.cos(angle) * dist;
+          const ty = Math.sin(angle) * dist - 50;
+          const dist2 = dist * (0.6 + Math.random() * 0.8);
+          const tx2 = Math.cos(angle + 0.3) * dist2;
+          const ty2 = Math.sin(angle + 0.3) * dist2 - 100;
+
+          el.className = 'sparkle';
+          el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+          el.style.left = x + 'px';
+          el.style.top = y + 'px';
+          el.style.setProperty('--sx', tx + 'px');
+          el.style.setProperty('--sy', ty + 'px');
+          el.style.setProperty('--sx2', tx2 + 'px');
+          el.style.setProperty('--sy2', ty2 + 'px');
+          el.style.animationDuration = (1 + Math.random() * 1.5) + 's';
+          el.style.fontSize = (12 + Math.random() * 16) + 'px';
+          document.body.appendChild(el);
+
+          setTimeout(() => el.remove(), 3000);
+        }
+
+        // Extra hearts burst
+        for (let i = 0; i < 12; i++) {
+          const el = document.createElement('div');
+          const angle = (Math.PI * 2 * i) / 12 + Math.random() * 0.3;
+          const dist = 100 + Math.random() * 200;
+          const hx = Math.cos(angle) * dist;
+          const hy = Math.sin(angle) * dist - 60;
+          const hx2 = hx * (1.2 + Math.random() * 0.5);
+          const hy2 = hy * (1.2 + Math.random() * 0.5) - 100;
+
+          el.className = 'floating-heart-burst';
+          el.textContent = ['💖', '💗', '❤️', '💕', '💗'][Math.floor(Math.random() * 5)];
+          el.style.left = x + 'px';
+          el.style.top = y + 'px';
+          el.style.setProperty('--hx', hx + 'px');
+          el.style.setProperty('--hy', hy + 'px');
+          el.style.setProperty('--hx2', hx2 + 'px');
+          el.style.setProperty('--hy2', hy2 + 'px');
+          el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+          el.style.fontSize = (14 + Math.random() * 20) + 'px';
+          document.body.appendChild(el);
+
+          setTimeout(() => el.remove(), 4000);
+        }
+      }
+
+      // --- Confetti strips ---
+      function createConfetti(x, y) {
+        const colors = ['#ff6b6b', '#ffa94d', '#ffd43b', '#69db7c', '#4dabf7', '#9775fa', '#f783ac', '#e599f7'];
+        for (let i = 0; i < 30; i++) {
+          const el = document.createElement('div');
+          const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI;
+          const dist = 60 + Math.random() * 200;
+          const tx = Math.cos(angle) * dist;
+          const ty = Math.sin(angle) * dist;
+
+          el.style.cssText = `
+            position: fixed; pointer-events: none; z-index: 99;
+            left: ${x}px; top: ${y}px;
+            width: ${4 + Math.random() * 6}px;
+            height: ${8 + Math.random() * 12}px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            border-radius: 2px;
+            opacity: 1;
+            animation: particleBurst ${0.8 + Math.random() * 1.2}s ease-out forwards;
+            --tx: ${tx}px;
+            --ty: ${ty + Math.random() * 80 - 40}px;
+            transform-origin: center;
+          `;
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 2500);
+        }
+      }
+
+      // --- Open envelope ---
+      function openEnvelope() {
+        if (isOpen) return;
+        isOpen = true;
+
+        const rect = envelopeScene.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 3;
+
+        // Immediate click feedback
+        envelopeScene.style.transition = 'transform 0.15s ease';
+        envelopeScene.style.transform = 'scale(0.97)';
+        setTimeout(() => {
+          envelopeScene.style.transform = 'scale(1)';
+        }, 150);
+
+        // Open flap — CSS transitions handle the visual
+        envelopeScene.classList.remove('closed');
+        envelopeScene.classList.add('open');
+
+        // Particles burst during opening
+        setTimeout(() => {
+          createBurst(cx, cy);
+          createConfetti(cx, cy);
+          createBurst(cx - 30, cy - 20);
+        }, 250);
+
+        // Cross-fade — remove envelope from layout immediately
+        setTimeout(() => {
+          // Remove envelope from flow instantly (no gap)
+          envelopeScene.style.display = 'none';
+
+          // Show ALL elements simultaneously
+          letterFullSection.classList.add('visible');
+          gallerySection.classList.add('visible');
+          rainbowDivider.classList.add('visible');
+          prideRibbon.classList.add('visible');
+
+          // Particles burst from letter position
+          const r2 = letterFullSection.getBoundingClientRect();
+          if (r2.width) {
+            createBurst(r2.left + r2.width / 2, r2.top + 80);
+            createConfetti(r2.left + r2.width / 2, r2.top + 80);
+          }
+        }, 1000);
+      }
+
+      // --- Click handler ---
+      envelopeScene.addEventListener('click', openEnvelope);
+
+      // --- Touch support for mobile ---
+      envelopeScene.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        openEnvelope();
+      });
+
+      // --- Entrance animation for envelope ---
+      envelopeScene.style.opacity = '0';
+      envelopeScene.style.transform = 'translateY(20px) scale(0.95)';
+      setTimeout(() => {
+        envelopeScene.style.transition = 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        envelopeScene.style.opacity = '1';
+        envelopeScene.style.transform = 'translateY(0) scale(1)';
+      }, 300);
+
+      // Small floating hearts on page load (additional)
+      setTimeout(() => {
+        const rect = envelopeScene.getBoundingClientRect();
+        if (rect.width) {
+          createBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        }
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
